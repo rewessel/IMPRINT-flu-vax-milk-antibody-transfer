@@ -1,5 +1,5 @@
 # Flu-vaccination-breastmilk-transfer
-Last updated by Remziye Wessel on 20 Feb 2026.
+Last updated by Remziye Wessel (wesselr@mit.edu) on 20 Feb 2026.
 
 This repository contains R and MATLAB scripts to perform analysis in the manuscript "Maternal influenza vaccination boosts durable breast milk antibody-mediated protection in infants" (Wessel and Tong et al, 2026).
 
@@ -57,4 +57,12 @@ RColorBrewer (1.1.3)
 ggpubr (0.6.2)
 
 effsize (0.8.1)
+
+
+Other dependencies:
+
+You will need to install the MATLAB PLSR package from rewessel/PLSR-DA_MATLAB to reproduce Figures 2, 4, 5, S7, and S8.
+
+
+All code was executed on a Dell machine running Windows 11 Pro (v25H2).
 
