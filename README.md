@@ -3,6 +3,7 @@ Last updated by Remziye Wessel on 20 Feb 2026.
 
 This repository contains R and MATLAB scripts to perform analysis in the manuscript "Maternal influenza vaccination boosts durable breast milk antibody-mediated protection in infants" (Wessel and Tong et al, 2026).
 
+
 Files:
 
 IMPRINT_breastmilk_analysis.R
@@ -31,11 +32,13 @@ imprint_functions.R
 
 process_imprint_metadata.R
 
+
 Software:
 
 R version 4.5.1
 
 MATLAB version R2024a
+
 
 R Packages:
 
