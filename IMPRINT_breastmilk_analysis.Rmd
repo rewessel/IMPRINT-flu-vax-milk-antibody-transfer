@@ -1,0 +1,41 @@
+---
+title: "IMPRINT Breast milk analysis"
+output: html_notebook
+---
+
+Load required packages and change working directory. The IMPRINT_breastmilk_setup.R script loads required packages and imports data sets needed for analysis.
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo=FALSE, warning=FALSE, include=FALSE}
+source('imprint_functions.R')
+source('IMPRINT_breastmilk_setup.R')
+```
+
+FIGURE 1B: Create summary heat map of the full data set. The vaccine records are encoded in separate columns in the main data set. To annotate the heat map, we have encoded vaccine timing as first anyone with no vaccines, then those vaccinated in pregnancy ordered by trimester, and finally those who were not vaccinated during pregnancy but were before or after.
+FIGURE 1C: Box plots of maternal:milk antibody ratios. PULL THIS FROM JUPYTER NOTEBOOK.
+```{r}
+
+source('Figure_1.R')
+
+```
+
+FIGURE 3A:  Plot a heat map of the Cohen's d comparing Ab features in vaccinated vs. unvaccinated patients.
+FIGURE 3B-E:  Univariate plots to show paired changes between 2 weeks and 6 weeks, separated by vaccination status.
+```{r}
+
+source('Figure_3.R')
+
+```
+
+FIGURE S1:  PCA scores plots colored by participant characteristics.
+```{r}
+
+source('Figure_S1.R')
+
+```
+
+
+
+

@@ -1,0 +1,55 @@
+################################################################################
+# FIGURE S1 ####################################################################
+################################################################################
+
+source('process_imprint_metadata.R')
+
+X = bm.sort %>% filter(bm.sort$Delta_weeks_bin==1)
+X = distinct(X, `SubjectID`, .keep_all = TRUE)
+
+shared.rows = intersect(X$`SubjectID`,rownames(cat.var))
+cat.var = cat.var %>% filter(rownames(cat.var) %in% shared.rows) 
+cont.var = cont.var %>% filter(rownames(cont.var) %in% shared.rows) 
+X = X %>% filter(X$`SubjectID` %in% shared.rows)
+
+cat.var = cat.var[order(rownames(cat.var)),]
+cont.var = cont.var[order(rownames(cont.var)),]
+
+X = X[order(X$`SubjectID`),]
+
+plot.data = log10(X[,-c(1:3,283:290)]+1) %>% na.omit() %>% t()
+seed=17
+colors = c("#619CFF","#F8766D","#00BA38",'black','white')
+
+pca = prcomp(t(plot.data),scale=T)
+prop.var = summary(pca)$importance[2,]
+summary(pca)
+x_scores = pca$x[,1:4]
+
+sc1=ggplot(x_scores, aes(PC1, PC2, color = as.factor(cat.var$child_sex), col=colors)) +
+  geom_hline(yintercept=0, color = "grey") + geom_vline(xintercept=0, color = "grey") + 
+  geom_point(size=3,alpha=0.75)  + 
+  labs(x=paste0('PC1',' (',round(prop.var[1]*100,1),'%)'),y=paste0('PC2',' (',round(prop.var[2]*100,1),'%)')) + 
+  theme(text=element_text(size=20)) + labs(color='Sex')
+sc2=ggplot(x_scores, aes(PC1, PC2, color = as.factor(cat.var$birth.season), col=colors)) +
+  geom_hline(yintercept=0, color = "grey") + geom_vline(xintercept=0, color = "grey") + 
+  geom_point(size=3,alpha=0.75)  + 
+  labs(x=paste0('PC1',' (',round(prop.var[1]*100,1),'%)'),y=paste0('PC2',' (',round(prop.var[2]*100,1),'%)')) + 
+  theme(text=element_text(size=20)) + labs(color='Season')
+sc3=ggplot(x_scores, aes(PC1, PC2, color = as.factor(cat.var$birth.year), col=colors)) +
+  geom_hline(yintercept=0, color = "grey") + geom_vline(xintercept=0, color = "grey") + 
+  geom_point(size=3,alpha=0.75)  +
+  labs(x=paste0('PC1',' (',round(prop.var[1]*100,1),'%)'),y=paste0('PC2',' (',round(prop.var[2]*100,1),'%)')) + 
+  theme(text=element_text(size=20)) + labs(color='Year')
+sc4=ggplot(x_scores, aes(PC1, PC2, color = cont.var$prepreg_BMI, col=colors)) +
+  geom_hline(yintercept=0, color = "grey") + geom_vline(xintercept=0, color = "grey") + 
+  geom_point(size=3,alpha=0.75)  + scale_color_viridis_c(na.value='#FDD700',direction=1,option='magma') + 
+  labs(x=paste0('PC1',' (',round(prop.var[1]*100,1),'%)'),y=paste0('PC2',' (',round(prop.var[2]*100,1),'%)')) + 
+  theme(text=element_text(size=20)) + labs(color='BMI')
+sc5=ggplot(x_scores, aes(PC1, PC2, color = as.factor(cat.var$race_white), col=colors)) +
+  geom_hline(yintercept=0, color = "grey") + geom_vline(xintercept=0, color = "grey") + 
+  geom_point(size=3,alpha=0.75)  +
+  labs(x=paste0('PC1',' (',round(prop.var[1]*100,1),'%)'),y=paste0('PC2',' (',round(prop.var[2]*100,1),'%)')) + 
+  theme(text=element_text(size=20)) + labs(color='Race')
+
+plot_grid(sc1,sc2,sc3,sc4,sc5,ncol=1)
