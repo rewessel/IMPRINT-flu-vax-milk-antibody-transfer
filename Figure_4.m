@@ -3,12 +3,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % filter to samples where mom got vaccinated during pregnancy
-samples = data(data.Delta_weeks_bin==1 & (data.trimester_at_vax_First_Trimester==1 |...
-    data.trimester_at_vax_Second_Trimester==1 | data.trimester_at_vax_Third_Trimester==1),:); 
+samples = data(data.Time_point==1 & (data.Vax_timing_bin==3 |...
+    data.Vax_timing_bin==4 | data.Vax_timing_bin==5),:); 
 
-X = log10(table2array(samples(:,4:282)));
-Y = table2array(samples(:,[285,287,288]));
-
+X = log10(table2array(samples(:,6:284)));
+Y = categorical(samples.Vax_timing_bin);
+Y = onehotencode(Y,2);
 myColors = [223, 194, 125;245, 245, 245;128, 205, 193]/255;
 
 Fig4 = PLSDA_main(X,Y,3,myVarNames,{'yes',0.3,0.8},'orthogonal','',{'kfold',10},...

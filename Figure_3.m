@@ -1,39 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Figure 3C, Figure S6 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-cd 'Z:/users/wesselr/data/IMPRINT/'
-data = readtable('IMPRINT_breastmilk_combined_features_11102025.xlsx');
-addpath('C:\Users\remzi\OneDrive\Documents\GitHub\PLSR-DA_MATLAB')
-matvax = readtable('G_ALTER_Matvax_20250326_REW.csv');
 
-%%
-data.trimester_at_vax = num2cell(nan(height(data),1));
-
-for i=1:height(data.SubjectID)
-    current_patient = data.SubjectID(i);
-    vaxtime = unique(matvax.trimester_at_vax(strcmp(matvax.Subject_ID,current_patient)));
-
-    if any(contains(vaxtime,'No Vaccine'))
-        data.trimester_at_vax(i) = vaxtime;
-
-    elseif any(contains(vaxtime,'First Trimester'))
-        data.trimester_at_vax(i) = vaxtime(contains(vaxtime,'First Trimester'));
-    
-    elseif any(contains(vaxtime,'Second Trimester'))
-        data.trimester_at_vax(i) = vaxtime(contains(vaxtime,'Second Trimester'));
-   
-    elseif any(contains(vaxtime,'Third Trimester'))
-        data.trimester_at_vax(i) = vaxtime(contains(vaxtime,'Third Trimester'));
-
-    elseif any(contains(vaxtime,'Before Pregnancy'))
-        data.trimester_at_vax(i) = vaxtime(contains(vaxtime,'Before'));
-
-    elseif any(contains(vaxtime,'After Pregnancy'))
-        data.trimester_at_vax(i) = vaxtime(contains(vaxtime,'After'));
-    end
-
-end
-%% Organize data for longitudinal plots of Fc traits over time
 clear fc
 data = sortrows(data,{'SubjectID','Delta_weeks'});
 studyID = unique(data.SubjectID);

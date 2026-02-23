@@ -1,4 +1,4 @@
-setwd('Z:/users/wesselr/data/IMPRINT')
+# setwd('Z:/users/wesselr/data/IMPRINT')
 obcrf = read_csv('./unedited_datasets/FW_ Nasal Swab Data/Remziye.Obstetrical.Form_2025-09-05.csv')
 nbcrf = read_csv('./unedited_datasets/FW_ Nasal Swab Data/Remziye.Newborn.Form_2025-09-05.csv')
 bl = read_csv('./unedited_datasets/FW_ Nasal Swab Data/Remziye.Baseline.Form_2025-09-05.csv')
@@ -67,3 +67,7 @@ birthdate = birthdate[,-1]
 
 cat.var = cbind(cat.var,birthdate)
 
+pca.variables = cbind(cat.var,cont.var)
+pca.variables = pca.variables[,c(12,37,29,18,28)]
+pca.variables$SubjectID = rownames(pca.variables)
+writexl::write_xlsx(pca.variables,'PCA_variables.xlsx')

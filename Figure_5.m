@@ -1,44 +1,18 @@
-%% PLSDA modeling - comparing the effect of breast milk and serum antibodies at predicting future flu infections
-cd 'Z:/users/wesselr/data/IMPRINT/'
-data = readtable('IMPRINT_combined_serum_breastmilk_11102025.xlsx');
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Figure 5 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-addpath('C:\Users\remzi\OneDrive\Documents\GitHub\PLSR-DA_MATLAB')
-matvax = readtable('G_ALTER_Matvax_20250326_REW.xlsx');
-metadata = readtable('G_ALTER_META_20250326_REW.csv');
-
-data.Properties.VariableNames = strrep(data.Properties.VariableNames,'_','-');
-
-myColors = [88 110 245;185 122 245;203 193 245;118 89 245; 86 158 245;219 86 245]/255;
-
-% this is case control matching to validate PLSDA models in Fig 6
-metadata_short = metadata(metadata.AGE_AT_BLOOD_DAYS_USE==0|metadata.AGE_AT_BLOOD_DAYS_USE==1,:);
-
-% add a step to exclude children with no opportunity for flu exposure
-ids_to_exclude = [119:601,621,628];
-ids_to_exclude = append('0',string(ids_to_exclude));
-metadata_short = metadata_short(~contains(metadata_short.Subject_ID,ids_to_exclude),:);
-
-% extract flu positive and flu negative IDs
-flu_pos = metadata_short(metadata_short.flu_exposure_1_age_days<=180 & ~strcmp(metadata_short.Aliquot_Type,'serum_m'),:);
-flu_neg = metadata_short(metadata_short.flu_exposure_1_age_days>180 & ~strcmp(metadata_short.Aliquot_Type,'serum_m'),:);
-
-% subset data based on exposure opportunity
-data = data(~contains(data.SubjectID,ids_to_exclude),:);
 
 %% PLSDA - compare breastmilk antibodies in babies who did or did not get an infection in first 6 months
 %% FIGURE S7C-D
 
-samples = [data.SubjectID data(:,contains(data.Properties.VariableNames,'milk'))]; 
+samples = combined_data(:,contains(combined_data.Properties.VariableNames,'milk'));
 
-samples.Properties.VariableNames{1} = 'Subject_ID';
-myVarNames = samples.Properties.VariableNames(2:end);
+myVarNames = samples.Properties.VariableNames;
 
-[~,ia,ib]=intersect(samples.Subject_ID,metadata_short.Subject_ID);
 
-joindata = join(samples(ia,:),metadata_short(ib,[1,17]),'Keys','Subject_ID');
-
-X = table2array(joindata(:,2:280));
-Y = table2array(joindata(:,281));
+X = table2array(samples);
+Y = combined_data.flu_exposure_1_age_days;
 
 Y(Y<=180)=1; Y(Y>180)=0;
 Y = logical(Y); Y = double([Y ~Y]);
@@ -48,26 +22,23 @@ Y = logical(Y); Y = double([Y ~Y]);
 X = X(:,ia);
 myVarNames = myVarNames(ia);
 
-Fig5_milk = PLSDA_main(log10(X),Y,2,myVarNames,{'no',nan,nan},'orthogonal','',{'kfold',10},1000,{'Flu+','Flu-'},myColors)
+Fig5_milk = PLSDA_main(log10(X),Y,2,myVarNames,{'no',0.1,0.6},'orthogonal','',{'kfold',10},1000,{'Flu+','Flu-'},myColors)
 
 %% PLSDA - compare serum antibodies in babies who did or did not get an infection in first 6 months
 %% FIGURE S7C-D
 
-samples = [data.SubjectID data(:,contains(data.Properties.VariableNames,'serum'))]; % filter to samples from a certain time point
-samples.Properties.VariableNames{1} = 'Subject_ID';
-myVarNames = samples.Properties.VariableNames(2:end);
+samples = combined_data(:,contains(combined_data.Properties.VariableNames,'serum'));
 
-[~,ia,ib]=intersect(samples.Subject_ID,metadata_short.Subject_ID);
+myVarNames = samples.Properties.VariableNames;
 
-joindata = join(samples(ia,:),metadata_short(ib,[1,17]),'Keys','Subject_ID');
-
-X = table2array(joindata(:,2:253));
-Y = table2array(joindata(:,254));
+X = table2array(samples);
+Y = combined_data.flu_exposure_1_age_days;
 
 Y(Y<=180)=1; Y(Y>180)=0;
 Y = logical(Y); Y = double([Y ~Y]);
 
-% filter low variance features out to help with elastic net
+% filter low variance features to make it a little easier for elastic net
+% to select serum features.
 myVarNames = myVarNames(var(log10(X))>0.15);
 X = X(:,var(log10(X))>0.15);
 
@@ -75,7 +46,8 @@ X = X(:,var(log10(X))>0.15);
 
 X = X(:,ia);
 myVarNames = myVarNames(ia);
-Fig5_serum = PLSDA_main(log10(X),Y,2,myVarNames,{'no',nan,nan},'orthogonal','',{'kfold',10},1000,{'Flu+','Flu-'},myColors)
+
+Fig5_serum = PLSDA_main(log10(X),Y,2,myVarNames,{'no',0.05,0.6},'orthogonal','',{'kfold',10},1000,{'Flu+','Flu-'},myColors)
 
 %% manually combine milk and serum features into a single model
 

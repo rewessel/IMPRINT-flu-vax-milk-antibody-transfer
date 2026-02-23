@@ -9,15 +9,18 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r, echo=FALSE, warning=FALSE, include=FALSE}
-source('imprint_functions.R')
+
 source('IMPRINT_breastmilk_setup.R')
+
 ```
 
-FIGURE 1B: Create summary heat map of the full data set. The vaccine records are encoded in separate columns in the main data set. To annotate the heat map, we have encoded vaccine timing as first anyone with no vaccines, then those vaccinated in pregnancy ordered by trimester, and finally those who were not vaccinated during pregnancy but were before or after.
-FIGURE 1C: Box plots of maternal:milk antibody ratios. PULL THIS FROM JUPYTER NOTEBOOK.
+FIGURE 1A: Create summary heat map of the full data set. The vaccine records are encoded in separate columns in the main data set. To annotate the heat map, we have encoded vaccine timing as first anyone with no vaccines, then those vaccinated in pregnancy ordered by trimester, and finally those who were not vaccinated during pregnancy but were before or after.
+FIGURE 1B: Box plots of maternal:milk antibody ratios. PULL THIS FROM JUPYTER NOTEBOOK.
 ```{r}
 
 source('Figure_1.R')
+
+Fig_1B
 
 ```
 
@@ -27,14 +30,17 @@ FIGURE 3B-E:  Univariate plots to show paired changes between 2 weeks and 6 week
 
 source('Figure_3.R')
 
+Fig_3BE
+
 ```
 
 FIGURE S1:  PCA scores plots colored by participant characteristics.
 ```{r}
 
 source('Figure_S1.R')
-
+Fig_S1
 ```
+
 
 
 
