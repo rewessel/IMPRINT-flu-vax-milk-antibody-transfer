@@ -10,27 +10,22 @@ IMPRINT_breastmilk_analysis.R
 
 IMPRINT_breastmilk_analysis.m
 
-Figure_1.R
+Figure_1.R - Plots Fig1A heatmap and Fig1B boxplots (requires Milk_serum_transfer_ratios.xlsx). 
 
-Figure_2.m
+Figure_2.m - Performs O-PLSDA modeling shown in Figure 2.
 
-Figure_3.m
+Figure_3.m - Plots line graphs in Fig3F-I and Figure S6 (manually tell the script which antigen you want to plot).
 
-Figure_3.R
+Figure_3.R - Calculates cohen's d effect size and plots heatmap in Fig3A, plots boxplots and performs statistical analysis in Fig 3B-E and Figure S5 (manually tell the script which antigen you want to plot).
 
-Figure_4.m
+Figure_4.m - Performs O-PLSDA modeling shown in Figure 4.
 
-Figure_5.m
+Figure_5.m - Performs O-PLSDA modeling shown in Figure 5 and Figure S7-S8 (requires Fig6_combined_serum_milk.xlsx, which is subsetted data to only infants with matched cord serum and milk samples and whose first 6 months of life coincided with a flu season).
 
-Figure_S1.R
+Figure_S1.R - Performs PCA and plots scores plots colored by a select few metadata variables stored in PCA_variables.xlsx.
 
-Figure_S4.R
+IMPRINT_breastmilk_setup.R - Loads all required packages and reads dataframes needed to run anaylses in R.
 
-IMPRINT_breastmilk_setup.R
-
-imprint_functions.R
-
-process_imprint_metadata.R
 
 
 Software:
@@ -58,6 +53,7 @@ ggpubr (0.6.2)
 
 effsize (0.8.1)
 
+cowplot (1.2.0)
 
 Other dependencies:
 
