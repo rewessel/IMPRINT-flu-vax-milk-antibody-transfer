@@ -1,78 +1,41 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Figure 3C, Figure S6 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Figure 2 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-clear fc
-data = sortrows(data,{'SubjectID','Delta_weeks'});
-studyID = unique(data.SubjectID);
-
-fc.IgG1 = nan(length(studyID),7);
-fc.IgG2 = nan(length(studyID),7);
-fc.IgG3 = nan(length(studyID),7);
-fc.IgG4 = nan(length(studyID),7);
-fc.IgM = nan(length(studyID),7);
-fc.IgA1 = nan(length(studyID),7);
-fc.IgA2 = nan(length(studyID),7);
-fc.FcgR2A = nan(length(studyID),7);
-fc.FcgR2B = nan(length(studyID),7);
-fc.FcgR3A = nan(length(studyID),7);
-fc.FcgR3B = nan(length(studyID),7);
-fc.FcaR = nan(length(studyID),7);
-fc.ADCD = nan(length(studyID),7);
-fc.ADNP = nan(length(studyID),7);
-fc.ADCP = nan(length(studyID),7);
-
-% uncomment whichever antigen you wish to plot.
-myAg = 'Kansas';
-% myAg = 'Victoria';
-% myAg = 'Phuket';
-% myAg = 'Austria';
+% filter to samples from  2 weeks postpartum & mom was vaccinated during
+% pregnancy compared to no vaccine at all
+samples = data(data.Time_point==1 & (data.Vax_timing_bin==1 |...
+    data.Vax_timing_bin==3 | data.Vax_timing_bin==4 |...
+    data.Vax_timing_bin==5),:); 
+% samples = data(data.Time_point==1 & (data.Vax_timing_bin==1 |...
+%     data.Vax_timing_bin==3),:); 
+% samples = data(data.Time_point==1 & (data.Vax_timing_bin==1 |...
+%     data.Vax_timing_bin==4 | data.Vax_timing_bin==5),:); 
 
 
-for i = 1:length(studyID)
-    clear fc_temp fc_array
-    current_patient = studyID(i);
-    current_data = data(strcmp(data.SubjectID,current_patient),4:282);
-    time_data = data.Delta_weeks(strcmp(data.SubjectID,current_patient));
+samples(8,6:end) = mean(samples(8:9,6:end)); 
+samples = samples([1:8,10:end],:); % remove duplicated sample
 
-    for j = 1:height(current_data)
-        fc_temp(j,:) = current_data(j,:);
-        time_points(j,i) = time_data(j);
-    end
+myColors = [245, 245, 245;166, 97, 26]/255;
 
-    varNames = fc_temp.Properties.VariableNames;
-    fc_array = table2array(fc_temp);
-    fc.IgG1(i,1:j) = mean(fc_array(:,contains(varNames,'IgG1') & contains(varNames,myAg)),2)';
-    fc.IgG2(i,1:j) = mean(fc_array(:,contains(varNames,'IgG2') & contains(varNames,myAg)),2)';
-    fc.IgG3(i,1:j) = mean(fc_array(:,contains(varNames,'IgG3') & contains(varNames,myAg)),2)';
-    fc.IgG4(i,1:j) = mean(fc_array(:,contains(varNames,'IgG4') & contains(varNames,myAg)),2)';
-    fc.IgM(i,1:j) = mean(fc_array(:,contains(varNames,'IgM') & contains(varNames,myAg)),2)';
-    fc.IgA1(i,1:j) = mean(fc_array(:,contains(varNames,'IgA1') & contains(varNames,myAg)),2)';
-    fc.IgA2(i,1:j) = mean(fc_array(:,contains(varNames,'IgA2') & contains(varNames,myAg)),2)';
-    fc.FcgR2A(i,1:j) = mean(fc_array(:,contains(varNames,'FcgR2A') & contains(varNames,myAg)),2)';
-    fc.FcgR2B(i,1:j) = mean(fc_array(:,contains(varNames,'FcgR2B') & contains(varNames,myAg)),2)';
-    fc.FcgR3A(i,1:j) = mean(fc_array(:,contains(varNames,'FcgR3A') & contains(varNames,myAg)),2)';
-    fc.FcgR3B(i,1:j) = mean(fc_array(:,contains(varNames,'FcgR3B') & contains(varNames,myAg)),2)';
-    fc.FcaR(i,1:j) = mean(fc_array(:,contains(varNames,'FcaR') & contains(varNames,myAg)),2)';
-    fc.ADCD(i,1:j) = mean(fc_array(:,contains(varNames,'ADCD') & contains(varNames,myAg)),2)';
-    fc.ADNP(i,1:j) = mean(fc_array(:,contains(varNames,'ADNP') & contains(varNames,myAg)),2)';
-    fc.ADCP(i,1:j) = mean(fc_array(:,contains(varNames,'ADCP') & contains(varNames,myAg)),2)';
+X = log10(table2array(samples(:,6:284))+1);
+Y = table2array(samples(:,5));
+Y1 = zeros(height(Y),2);
+Y1(Y==3 | Y==4 | Y==5,1) = 1; % first column is 1 if vaccinated at any point in pregnancy
+Y1(Y==1,2) = 1; % second column is 1 if not vaccinated during pregnancy
 
-end
+% remove features that are more than 90% zeros
 
-time_points(time_points==0) = nan;
+c = sum(X~=0,1);
+mdlVarNames = myVarNames(c>height(X)*0.1);
+X = X(:,c>height(X)*0.1);
+% mdlVarNames = myVarNames;
 
-%% Plot the results
-figure
-fns = fieldnames(fc);
-for i = 1:15
-        nexttile; plotdata = log10(fc.(fns{i})');
+% X = X([1:43,45:49],:);
+% Y1 = Y1([1:43,45:49],:);
 
-    for j = 1:length(studyID)
-            plot(time_points(1:3,j),plotdata(1:3,j),'.-','color',[0.1 0.1 0.1 0.2]); hold on
-    end
+% [varNames,ia] = run_elastic_net(zscore(X), Y1, mdlVarNames, 'minMSE',0.1, 100, 0.8, 5);
+Fig2 = PLSDA_main(X,Y1,2,mdlVarNames,{'yes',0.1,0.8},'orthogonal','',{'kfold',5},100,{'vax','no vax'},myColors)
+% Fig2 = PLSDA_main(X,Y1,2,mdlVarNames,{'yes',1,0.8},'orthogonal','',{'kfold',10},1000,{'vax','no vax'},myColors)
 
-    title(fns(i)); xlabel('Weeks postpartum'); ylabel('Log10(MFI)');xlim([0 52]) 
-
-end
-
+[~,Fig2.CV_pval]=ttest2(Fig2.CV_accuracy,Fig2.CV_accuracy_perm);
