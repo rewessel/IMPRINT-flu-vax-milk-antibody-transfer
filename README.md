@@ -33,6 +33,7 @@ R version 4.5.1
 
 MATLAB version R2024a
 
+Cytoscape version 3.10.4
 
 R Packages:
 
@@ -56,7 +57,7 @@ cowplot (1.2.0)
 
 Other dependencies:
 
-You will need to install the MATLAB PLSR package from rewessel/PLSR-DA_MATLAB to reproduce Figures 3, 5, 6, and S9.
+You will need to install the MATLAB PLSR package from rewessel/PLSR-DA_MATLAB to reproduce Figures 3, 5, 6, and S9. Correlation networks in Figures S5, S8, and S10 were produced using Cytoscape software from *.csv files describing correlation networks output from the the rewessel/PLSR-DA_MATLAB package.
 
 All code was executed on a Dell machine running Windows 11 Pro (v25H2).
 
