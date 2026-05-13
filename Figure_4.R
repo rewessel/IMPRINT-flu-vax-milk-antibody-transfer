@@ -62,24 +62,36 @@ myAntigen = 'B_Austria_1359417_2021'
 rm(vax.t1,vax.t2,novax.t1,novax.t2)
 
 vax.t1 = bm[(bm$Vax_timing_bin == 3 | bm$Vax_timing_bin == 4 | bm$Vax_timing_bin == 5) & bm$Time_point==1,] %>% dplyr::select(contains(myAntigen))
+# vax.t1 = vax.t1 %/% t(vax.t1[,2])
+# vax.t1[vax.t1==Inf] = 0
+# vax.t1[is.na(vax.t1)] = 0
 vax.t1 = log10(vax.t1+1)
 vax.t1 = pivot_longer(vax.t1,cols=colnames(vax.t1),names_to='Ag',values_to='MFI')
 vax.t1$Fc = sub("\\_.*", "", vax.t1$Ag)
 vax.t1$group = 'Vax_2wk'
 
 vax.t2 = bm[(bm$Vax_timing_bin == 3 | bm$Vax_timing_bin == 4 | bm$Vax_timing_bin == 5) & bm$Time_point==2,] %>% dplyr::select(contains(myAntigen))
+# vax.t2 = vax.t2 %/% t(vax.t2[,2])
+# vax.t2[vax.t2==Inf] = 0
+# vax.t2[is.na(vax.t2)] = 0
 vax.t2 = log10(vax.t2+1)
 vax.t2 = pivot_longer(vax.t2,cols=colnames(vax.t2),names_to='Ag',values_to='MFI')
 vax.t2$Fc = sub("\\_.*", "", vax.t2$Ag)
 vax.t2$group = 'Vax_6wk'
 
 novax.t1 = bm[(bm$Vax_timing_bin == 1) & bm$Time_point==1,] %>% dplyr::select(contains(myAntigen))
+# novax.t1 = novax.t1 %/% t(novax.t1[,2])
+# novax.t1[novax.t1==Inf] = 0
+# novax.t1[is.na(novax.t1)] = 0
 novax.t1 = log10(novax.t1+1)
 novax.t1 = pivot_longer(novax.t1,cols=colnames(novax.t1),names_to='Ag',values_to='MFI')
 novax.t1$Fc = sub("\\_.*", "", novax.t1$Ag)
 novax.t1$group = 'No_Vax_2wk'
 
 novax.t2 = bm[(bm$Vax_timing_bin == 1) & bm$Time_point==2,] %>% dplyr::select(contains(myAntigen))
+# novax.t2 = novax.t2 %/% t(novax.t2[,2])
+# novax.t2[novax.t2==Inf] = 0
+# novax.t2[is.na(novax.t2)] = 0
 novax.t2 = log10(novax.t2+1)
 novax.t2 = pivot_longer(novax.t2,cols=colnames(novax.t2),names_to='Ag',values_to='MFI')
 novax.t2$Fc = sub("\\_.*", "", novax.t2$Ag)
