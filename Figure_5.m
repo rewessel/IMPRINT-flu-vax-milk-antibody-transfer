@@ -27,8 +27,7 @@ X = X(:,c>height(X)*0.1);
 
 Fig4 = PLSDA_main(X,Y,3,mdlVarNames,{'yes',0.6,0.8},'orthogonal','',{'kfold',5},...
     100,{'no vax','1st Tri','2nd Tri','3rd Tri'},myColors)
-% Fig4 = PLSDA_main(X,Y,3,myVarNames,{'yes',0.5,0.7},'orthogonal','',{'kfold',10},...
-%     1000,{'1st Tri','2nd Tri','3rd Tri'},myColors)
+
 
 Ygroup = [ones(100,1);2*ones(100,1);3*ones(100,1);4*ones(100,1)];
 [~,~,stats] = kruskalwallis([Fig4.CV_accuracy(:,1); ...
