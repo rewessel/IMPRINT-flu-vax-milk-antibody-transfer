@@ -34,7 +34,7 @@ MATLAB version R2024a
 
 Cytoscape version 3.10.4
 
-R Packages:
+**R Packages:**
 
 ggplot2 (4.0.0)
 
